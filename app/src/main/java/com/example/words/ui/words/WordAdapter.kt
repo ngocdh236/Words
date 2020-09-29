@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.words.R
 import com.example.words.network.Word
 import kotlinx.android.synthetic.main.word_item_view.view.*
 
@@ -15,6 +16,7 @@ class WordAdapter: RecyclerView.Adapter<WordItemViewHolder>() {
             field = value
             notifyDataSetChanged()
         }
+
     override fun getItemCount() = words.size
 
     override fun onBindViewHolder(holder: WordItemViewHolder, position: Int) {
