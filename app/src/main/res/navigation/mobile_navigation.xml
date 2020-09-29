@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_words"
-        android:name="com.example.words.ui.words.WordsFragment"
+        android:name="com.example.words.ui.words.WordsListFragment"
         android:label="@string/title_words"
         tools:layout="@layout/fragment_words" />
 

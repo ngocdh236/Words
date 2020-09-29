@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.word_item_view.view.*
 
 class WordItemViewHolder(val view: View): RecyclerView.ViewHolder(view)
 
-class WordAdapter: RecyclerView.Adapter<WordItemViewHolder>() {
+class WordsListAdapter(): RecyclerView.Adapter<WordItemViewHolder>() {
     var words = listOf<Word>()
         set(value) {
             field = value

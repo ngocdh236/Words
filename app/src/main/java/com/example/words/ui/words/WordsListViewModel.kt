@@ -9,27 +9,20 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class WordsViewModel : ViewModel() {
+class WordsListViewModel : ViewModel() {
+    val words: LiveData<List<Word>>
+        get() = this._words
 
-    private val _response = MutableLiveData<List<Word>>()
+    private val _words = MutableLiveData<List<Word>>()
 
-
-    val response: LiveData<List<Word>>
-        get() = _response
-
-    init {
-        getWords()
-    }
-
-    private fun getWords() {
+    fun getWords() {
         WordsApi.retrofitService.getWords().enqueue(object: Callback<List<Word>> {
             override fun onResponse(call: Call<List<Word>>, response: Response<List<Word>>) {
-                _response.value = response.body()
+                _words.value = response.body()
             }
 
             override fun onFailure(call: Call<List<Word>>, t: Throwable) {
             }
         })
-
     }
 }
