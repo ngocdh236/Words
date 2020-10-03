@@ -3,7 +3,7 @@ package com.example.words.ui.words
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.words.network.Word
+import Word
 import com.example.words.network.WordsApi
 import retrofit2.Call
 import retrofit2.Callback

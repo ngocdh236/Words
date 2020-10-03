@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.words.R
-import com.example.words.network.Word
+import Word
 import kotlinx.android.synthetic.main.word_item_view.view.*
 
 class WordItemViewHolder(val view: View): RecyclerView.ViewHolder(view)
@@ -22,6 +22,7 @@ class WordsListAdapter(): RecyclerView.Adapter<WordItemViewHolder>() {
     override fun onBindViewHolder(holder: WordItemViewHolder, position: Int) {
         var word = words[position]
         holder.view.wordText.text = word.text
+        holder.view.wordLang.text = word.lang
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WordItemViewHolder {
