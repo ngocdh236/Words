@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.words.R
+import com.example.words.Word
 import com.example.words.databinding.FragmentWordsBinding
 import kotlinx.android.synthetic.main.fragment_words.*
 
@@ -36,14 +37,14 @@ class WordsListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewDataBinding.viewmodel?.getWords()
         setupAdapter()
         setupObservers()
     }
 
     fun setupObservers() {
-        viewDataBinding.viewmodel?.words?.observe(viewLifecycleOwner, Observer {
-            adapter.words = it
+        viewDataBinding.viewmodel?.words?.observe(viewLifecycleOwner, Observer { resource ->
+            val words = resource.data ?: listOf<Word>()
+            adapter.words = words
         })
     }
 

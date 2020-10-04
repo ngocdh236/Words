@@ -1,28 +1,18 @@
 package com.example.words.ui.words
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import Word
-import com.example.words.network.WordsApi
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.words.Word
+import com.example.words.repository.Resource
+import com.example.words.repository.WordsRepositoryImpl
 
-class WordsListViewModel : ViewModel() {
-    val words: LiveData<List<Word>>
-        get() = this._words
+class WordsListViewModel() : ViewModel() {
 
-    private val _words = MutableLiveData<List<Word>>()
+    private val repository = WordsRepositoryImpl()
 
-    fun getWords() {
-        WordsApi.retrofitService.getWords().enqueue(object: Callback<List<Word>> {
-            override fun onResponse(call: Call<List<Word>>, response: Response<List<Word>>) {
-                _words.value = response.body()
-            }
+    val words: LiveData<Resource<List<Word>>>
 
-            override fun onFailure(call: Call<List<Word>>, t: Throwable) {
-            }
-        })
+    init {
+        words = repository.loadWords()
     }
 }

@@ -1,6 +1,17 @@
-data class Word(val lang: String, val text: String) {
-    private val translations: MutableSet<Word> = mutableSetOf()
+package com.example.words
 
+import androidx.room.Entity
+import com.google.gson.annotations.SerializedName
+
+@Entity(primaryKeys = ["text"])
+data class Word(
+    @field:SerializedName("lang")
+    val lang: String,
+    @field:SerializedName("text")
+    val text: String,
+    @field:SerializedName("translations")
+    private val translations: MutableSet<Word> = mutableSetOf()
+) {
     fun addTranslation(t: Word) {
         translations.add(t)
     }

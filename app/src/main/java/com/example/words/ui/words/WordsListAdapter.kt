@@ -5,7 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.words.R
-import Word
+import com.example.words.Word
+
 import kotlinx.android.synthetic.main.word_item_view.view.*
 
 class WordItemViewHolder(val view: View): RecyclerView.ViewHolder(view)
