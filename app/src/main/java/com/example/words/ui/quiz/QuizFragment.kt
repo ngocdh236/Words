@@ -1,5 +1,6 @@
 package com.example.words.ui.quiz
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.words.R
+import kotlinx.android.synthetic.main.fragment_quiz.*
 
 class QuizFragment : Fragment() {
 
@@ -25,6 +27,17 @@ class QuizFragment : Fragment() {
         quizViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
+
         return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        start_button.text = quizViewModel.buttonTitle
+        start_button.setOnClickListener {
+            val intent = Intent(activity, PlayQuizActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

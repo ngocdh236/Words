@@ -7,7 +7,10 @@ import androidx.lifecycle.ViewModel
 class QuizViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is dashboard Fragment"
+        value = "Welcome to Word Quiz"
     }
+
     val text: LiveData<String> = _text
+
+    val buttonTitle: String = "Start"
 }
