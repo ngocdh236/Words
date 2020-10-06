@@ -50,7 +50,7 @@ data class Word(
         for (j in 1..n) {
             for (i in 1..m) {
                 var substitutionCost = 1
-                if (this.text[i - 1] == another.text[j - 1]) substitutionCost = 0
+                if (this.text[i - 1].toLowerCase() == another.text[j - 1].toLowerCase()) substitutionCost = 0
 
                 d[i][j] = minOf(
                     d[i - 1][j] + 1,

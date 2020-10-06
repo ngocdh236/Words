@@ -24,6 +24,12 @@ class WordsListAdapter(): RecyclerView.Adapter<WordItemViewHolder>() {
         var word = words[position]
         holder.view.wordText.text = word.text
         holder.view.wordLang.text = word.lang
+        var translationsText = ""
+        for (translation in word.translationsSet) {
+            translationsText += "${translation.lang}: ${translation.text}, "
+
+        }
+        holder.view.wordTranslations.text = translationsText
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WordItemViewHolder {

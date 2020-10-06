@@ -15,7 +15,7 @@ class QuizViewViewModel(private val wordsRepository: WordsRepository = WordsRepo
 
     private val ONE_SECOND = 1000L
 
-    private val QUIZ_TIME_OUT = 30L * ONE_SECOND
+    private val QUIZ_TIME_OUT = 10L * ONE_SECOND
 
     private val DEFAULT_NUMBER_OF_QUIZZES = 5
 
@@ -58,7 +58,7 @@ class QuizViewViewModel(private val wordsRepository: WordsRepository = WordsRepo
 
     val currentQuizTitle: LiveData<String?> = Transformations.map(currentQuiz) { quiz ->
         return@map quiz?.translationsSet?.first()?.let {
-            "What is ${quiz.text.toUpperCase()}(${quiz.lang.capitalize()}) in ${it.lang.capitalize()}?"
+            "What is ${quiz.text.toUpperCase()} (${quiz.lang.capitalize()}) in ${it.lang.capitalize()}?"
         }
     }
 
