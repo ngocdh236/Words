@@ -1,44 +1,29 @@
 package com.example.words.ui.quiz
 
-import android.os.Build
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.example.words.AppExecutors
 import com.example.words.R
 import com.example.words.databinding.FragmentPlayQuizBinding
-import com.example.words.databinding.FragmentWordsBinding
-import com.example.words.ui.words.WordsListViewModel
-import kotlinx.android.synthetic.main.activity_main.*
+import com.example.words.db.WordsDB
+import com.example.words.models.QuizResult
+import com.example.words.other.QuizResultFeedbackHelper
 import kotlinx.android.synthetic.main.fragment_play_quiz.*
+import java.util.*
+import kotlin.concurrent.schedule
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [PlayQuizFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class PlayQuizFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
     private lateinit var viewDataBinding: FragmentPlayQuizBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,34 +44,90 @@ class PlayQuizFragment : Fragment() {
     }
 
     private fun setup() {
+        context?.let {
+            viewDataBinding.viewmodel?.quizResultDao = WordsDB.getInstance(it).quizResultDao()
+        }
+
         next_button.setOnClickListener {
-            viewDataBinding.viewmodel?.goNext()
+            goNext()
+        }
+
+        quiz_answer_input.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun afterTextChanged(p0: Editable?) {
+                viewDataBinding.viewmodel?.setUserAnswer(p0?.toString())
+            }
+        })
+
+        done_button.setOnClickListener {
+            viewDataBinding.viewmodel?.finishQuizzes { result ->
+                showResultAndDismiss(result)
+            }
+
         }
     }
 
     private fun setupObservers() {
-        viewDataBinding.viewmodel?.currentQuizTitle?.observe(viewLifecycleOwner, Observer {
+        viewDataBinding.viewmodel?.currentQuizIndexTitle?.observe(viewLifecycleOwner, Observer {
             index_text.text = it
+        })
+
+        viewDataBinding.viewmodel?.currentQuizTitle?.observe(viewLifecycleOwner, Observer {
+            quiz_title_text_view.text = it
+        })
+
+        viewDataBinding.viewmodel?.currentEditDistanceText?.observe(viewLifecycleOwner, Observer {
+            edit_distanace_text.text = it
+        })
+
+        viewDataBinding.viewmodel?.currentCountDownTimerText?.observe(viewLifecycleOwner, Observer {
+            count_down_text.text = it
+        })
+
+        viewDataBinding.viewmodel?.currentCountDownTimer?.observe(viewLifecycleOwner, Observer {
+            if (it == 0) {
+                // Delay a bit
+                Timer("", false).schedule(1000) {
+                    AppExecutors.instance.mainThread().execute {
+                        goNext()
+                    }
+                }
+            }
+        })
+
+        viewDataBinding.viewmodel?.isQuizzesDone?.observe(viewLifecycleOwner, Observer {
+            next_button.isEnabled = !it
+            quiz_answer_input.isEnabled = !it
+            quiz_answer_input.clearFocus()
+            if (it) {
+                done_button.visibility = View.VISIBLE
+            } else {
+                done_button.visibility = View.INVISIBLE
+            }
         })
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment PlayQuizFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            PlayQuizFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    private fun goNext() {
+        quiz_answer_input.text = null
+        viewDataBinding.viewmodel?.goNext()
+    }
+
+    private fun showResultAndDismiss(result: QuizResult) {
+        val dialogBuilder = AlertDialog.Builder(activity!!)
+        dialogBuilder.setMessage(QuizResultFeedbackHelper.feedback(result))
+            // if the dialog is cancelable
+            .setCancelable(false)
+            .setPositiveButton("Ok", DialogInterface.OnClickListener {
+                    dialog, id ->
+                dialog.dismiss()
+                activity?.finish()
+            })
+
+        val alert = dialogBuilder.create()
+        alert.setTitle("Quiz Result")
+        alert.show()
     }
 }

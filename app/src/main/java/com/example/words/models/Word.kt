@@ -3,7 +3,7 @@ package com.example.words
 import androidx.room.Entity
 import com.google.gson.annotations.SerializedName
 
-@Entity(primaryKeys = ["text"])
+//@Entity(primaryKeys = ["text"])
 data class Word(
     @field:SerializedName("lang")
     val lang: String,
@@ -12,6 +12,10 @@ data class Word(
     @field:SerializedName("translations")
     private val translations: MutableSet<Word> = mutableSetOf()
 ) {
+
+    val translationsSet: Set<Word>
+        get() = translations
+
     fun addTranslation(t: Word) {
         translations.add(t)
     }

@@ -8,7 +8,8 @@ import androidx.room.OnConflictStrategy
 import com.example.words.Word
 
 
-@Dao
+
+// @Dao
 interface WordsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(user: Word)
