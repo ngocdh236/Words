@@ -66,7 +66,6 @@ class PlayQuizFragment : Fragment() {
             viewDataBinding.viewmodel?.finishQuizzes { result ->
                 showResultAndDismiss(result)
             }
-
         }
     }
 
@@ -101,8 +100,8 @@ class PlayQuizFragment : Fragment() {
         viewDataBinding.viewmodel?.isQuizzesDone?.observe(viewLifecycleOwner, Observer {
             next_button.isEnabled = !it
             quiz_answer_input.isEnabled = !it
-            quiz_answer_input.clearFocus()
             if (it) {
+                quiz_answer_input.clearFocus()
                 done_button.visibility = View.VISIBLE
             } else {
                 done_button.visibility = View.INVISIBLE
@@ -111,8 +110,9 @@ class PlayQuizFragment : Fragment() {
     }
 
     private fun goNext() {
-        quiz_answer_input.text = null
         viewDataBinding.viewmodel?.goNext()
+        viewDataBinding.viewmodel?.setUserAnswer(null)
+        quiz_answer_input.text = null
     }
 
     private fun showResultAndDismiss(result: QuizResult) {

@@ -6,6 +6,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.words.db.QuizResultDao
 import com.example.words.models.QuizResult
+import kotlin.math.roundToInt
 
 class ProfileViewModel : ViewModel() {
 
@@ -29,8 +30,8 @@ class ProfileViewModel : ViewModel() {
                             result.map { it.correctAnswers }.reduce { sum, element -> sum + element }
                         val totalQuizzes =
                             result.map { it.numberOfQuizzes }.reduce { sum, element -> sum + element }
-                        val percentage = totalCorrectAnswers / totalQuizzes
-                        return@map "Your correct answer percentage: ${percentage}"
+                        val percentage = ((totalCorrectAnswers.toDouble() / totalQuizzes.toDouble()) * 100)
+                        return@map String.format("Your correct answer percentage: %.2f", percentage) + "%"
                     } else {
                         return@map "You have not done any quiz!!!"
                     }

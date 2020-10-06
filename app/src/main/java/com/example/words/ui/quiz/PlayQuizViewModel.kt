@@ -5,7 +5,6 @@ import androidx.lifecycle.*
 import com.example.words.Word
 import com.example.words.combineWith
 import com.example.words.db.QuizResultDao
-import com.example.words.db.WordsDB
 import com.example.words.models.QuizResult
 import com.example.words.repository.Resource
 import com.example.words.repository.WordsRepository
@@ -16,9 +15,9 @@ class QuizViewViewModel(private val wordsRepository: WordsRepository = WordsRepo
 
     private val ONE_SECOND = 1000L
 
-    private val QUIZ_TIME_OUT = 5L * ONE_SECOND
+    private val QUIZ_TIME_OUT = 30L * ONE_SECOND
 
-    private val DEFAULT_NUMBER_OF_QUIZZES = 2
+    private val DEFAULT_NUMBER_OF_QUIZZES = 5
 
     private var numberOfQuizzes = MutableLiveData<Int>().apply { value = 0 }
 
@@ -31,6 +30,8 @@ class QuizViewViewModel(private val wordsRepository: WordsRepository = WordsRepo
     private var result: Array<Boolean> = arrayOf()
 
     private var timer: CountDownTimer? = null
+
+    private val _isQuizzesDone = MutableLiveData<Boolean>().apply { value = false }
 
     var quizResultDao: QuizResultDao? = null
 
@@ -62,32 +63,25 @@ class QuizViewViewModel(private val wordsRepository: WordsRepository = WordsRepo
     }
 
     val currentQuizEditDistance: LiveData<Int?> = currentQuiz.combineWith(_currentQuizAnswer) { quiz, answer ->
-        if (answer == null || quiz == null) {
-            return@combineWith null
-        }
+        if (answer == null || quiz == null) {  return@combineWith null }
+        if (answer.length == 0) { return@combineWith null }
 
         // Always take first translation for the quiz to simplify things
         return@combineWith quiz.translationsSet.first().editDistance(Word(lang = "", text = answer))
     }
 
-    val currentEditDistanceText: LiveData<String?> = Transformations.map(currentQuizEditDistance) {editDistance ->
+    val currentEditDistanceText: LiveData<String?> = Transformations.map(currentQuizEditDistance) { editDistance ->
         editDistance?.let {
             if (editDistance == 0) { return@let "Correct" }
             return@let "You have ${editDistance} incorrect letters"
-        }
+        } ?: null
     }
 
     val currentCountDownTimer = MutableLiveData<Int>().apply { value = QUIZ_TIME_OUT.toInt() }
 
     val currentCountDownTimerText: LiveData<String> = Transformations.map(currentCountDownTimer) { "${it} seconds left" }
 
-    val isQuizzesDone: LiveData<Boolean> = Transformations.map(currentCountDownTimer) {
-        if (it == 0) {
-            return@map isLastQuestion
-        }
-
-        return@map false
-    }
+    val isQuizzesDone: LiveData<Boolean> = _isQuizzesDone
 
     init {
         resource = wordsRepository.loadWords()
@@ -100,25 +94,27 @@ class QuizViewViewModel(private val wordsRepository: WordsRepository = WordsRepo
                 result = Array(quizzesCount) { false }
                 if (quizzesCount > 0) {
                     resetTimer()
+                    _isQuizzesDone.value = false
+                } else {
+                    _isQuizzesDone.value = true
                 }
             }
         })
     }
 
     fun goNext() {
-        updateFinalResult()
-
         if (isQuizzesDone.value ?: false) { return }
 
-        if (isLastQuestion) {
-            timer?.cancel()
-            return
-        }
-
-        resetTimer()
-        _currentQuizIndex.value = _currentQuizIndex.value!! + 1
+        updateCurrentQuizResult()
         _currentQuizAnswer.value = null
-        timer?.start()
+        if (isLastQuestion) {
+            _isQuizzesDone.value = true
+            currentCountDownTimer.value = 0
+            timer?.cancel()
+        } else {
+            resetTimer()
+            _currentQuizIndex.value = _currentQuizIndex.value!! + 1
+        }
     }
 
     fun setUserAnswer(answer: String?) {
@@ -136,7 +132,10 @@ class QuizViewViewModel(private val wordsRepository: WordsRepository = WordsRepo
         completion(result)
     }
 
-    private fun updateFinalResult() {
+    // Update result after each quiz
+    private fun updateCurrentQuizResult() {
+        val currentQUizdistance = currentQuizEditDistance.value
+        val value = currentQuizEditDistance.value == 0
         result[currentQuizIndex.value!!] = (currentQuizEditDistance.value ?: 1) == 0
     }
 
