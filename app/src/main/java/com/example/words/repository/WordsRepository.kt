@@ -1,5 +1,7 @@
-// Name: Doan Ngoc
-// Student ID: 1605449
+/*
+Name: Doan Ngoc
+Student ID: 1605449
+*/
 
 
 package com.example.words.repository

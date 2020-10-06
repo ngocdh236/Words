@@ -1,12 +1,14 @@
+/*
+Name: Doan Ngoc
+Student ID: 1605449
+*/
+
 package com.example.words.db
 
 
-import androidx.lifecycle.LiveData
-import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import com.example.words.Word
-
 
 
 // @Dao

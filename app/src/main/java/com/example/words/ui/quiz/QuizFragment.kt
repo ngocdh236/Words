@@ -1,3 +1,8 @@
+/*
+Name: Doan Ngoc
+Student ID: 1605449
+*/
+
 package com.example.words.ui.quiz
 
 import android.content.Intent
@@ -17,9 +22,9 @@ class QuizFragment : Fragment() {
     private lateinit var quizViewModel: QuizViewModel
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         quizViewModel = ViewModelProviders.of(this).get(QuizViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_quiz, container, false)

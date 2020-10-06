@@ -1,3 +1,8 @@
+/*
+Name: Doan Ngoc
+Student ID: 1605449
+*/
+
 package com.example.words.ui.profile
 
 import android.os.Bundle
@@ -16,12 +21,12 @@ class ProfileFragment : Fragment() {
     private lateinit var profileViewModel: ProfileViewModel
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         profileViewModel =
-                ViewModelProviders.of(this).get(ProfileViewModel::class.java)
+            ViewModelProviders.of(this).get(ProfileViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_profile, container, false)
         val textView: TextView = root.findViewById(R.id.text_notifications)
         profileViewModel.quizResultDao = WordsDB.getInstance(context!!).quizResultDao()

@@ -1,3 +1,8 @@
+/*
+Name: Doan Ngoc
+Student ID: 1605449
+*/
+
 package com.example.words.ui.words
 
 import android.os.Bundle

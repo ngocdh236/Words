@@ -1,3 +1,8 @@
+/*
+Name: Doan Ngoc
+Student ID: 1605449
+*/
+
 package com.example.words.ui.words
 
 import android.view.LayoutInflater
@@ -9,9 +14,9 @@ import com.example.words.Word
 
 import kotlinx.android.synthetic.main.word_item_view.view.*
 
-class WordItemViewHolder(val view: View): RecyclerView.ViewHolder(view)
+class WordItemViewHolder(val view: View) : RecyclerView.ViewHolder(view)
 
-class WordsListAdapter(): RecyclerView.Adapter<WordItemViewHolder>() {
+class WordsListAdapter() : RecyclerView.Adapter<WordItemViewHolder>() {
     var words = listOf<Word>()
         set(value) {
             field = value

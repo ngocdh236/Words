@@ -1,3 +1,8 @@
+/*
+Name: Doan Ngoc
+Student ID: 1605449
+*/
+
 package com.example.words
 
 import com.example.words.models.QuizResult
@@ -29,6 +34,9 @@ class QuizResultFeedbackHelperTest {
     @Test
     fun feedbackLevel4() {
         val result = QuizResult(1, 5, 1)
-        assertEquals("Stop playing video games! Focus and study more!", QuizResultFeedbackHelper.feedback(result))
+        assertEquals(
+            "Stop playing video games! Focus and study more!",
+            QuizResultFeedbackHelper.feedback(result)
+        )
     }
 }

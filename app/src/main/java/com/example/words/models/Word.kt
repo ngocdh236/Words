@@ -1,9 +1,12 @@
+/*
+Name: Doan Ngoc
+Student ID: 1605449
+*/
+
 package com.example.words
 
-import androidx.room.Entity
 import com.google.gson.annotations.SerializedName
 
-//@Entity(primaryKeys = ["text"])
 data class Word(
     @field:SerializedName("lang")
     val lang: String,
@@ -41,7 +44,8 @@ data class Word(
         val m = this.text.length
         val n = another.text.length
 
-        val d: Array<IntArray> = Array(m + 1) { IntArray(n + 1) { 0 } } // set all (m+1) * (n+1) elements to zero
+        val d: Array<IntArray> =
+            Array(m + 1) { IntArray(n + 1) { 0 } } // set all (m+1) * (n+1) elements to zero
 
         for (i in 1..m) d[i][0] = i
 
@@ -50,7 +54,8 @@ data class Word(
         for (j in 1..n) {
             for (i in 1..m) {
                 var substitutionCost = 1
-                if (this.text[i - 1].toLowerCase() == another.text[j - 1].toLowerCase()) substitutionCost = 0
+                if (this.text[i - 1].toLowerCase() == another.text[j - 1].toLowerCase()) substitutionCost =
+                    0
 
                 d[i][j] = minOf(
                     d[i - 1][j] + 1,

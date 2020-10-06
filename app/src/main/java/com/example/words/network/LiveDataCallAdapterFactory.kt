@@ -1,3 +1,8 @@
+/*
+Name: Doan Ngoc
+Student ID: 1605449
+*/
+
 package com.example.words.network
 
 import androidx.lifecycle.LiveData
@@ -15,7 +20,8 @@ class LiveDataCallAdapterFactory : CallAdapter.Factory() {
         if (CallAdapter.Factory.getRawType(returnType) != LiveData::class.java) {
             return null
         }
-        val observableType = CallAdapter.Factory.getParameterUpperBound(0, returnType as ParameterizedType)
+        val observableType =
+            CallAdapter.Factory.getParameterUpperBound(0, returnType as ParameterizedType)
         val rawObservableType = CallAdapter.Factory.getRawType(observableType)
         if (rawObservableType != ApiResponse::class.java) {
             throw IllegalArgumentException("type must be a resource")

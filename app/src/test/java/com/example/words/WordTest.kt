@@ -1,3 +1,7 @@
+/*
+Name: Doan Ngoc
+Student ID: 1605449
+*/
 
 import com.example.words.Word
 import org.junit.Assert.*
@@ -124,7 +128,8 @@ class WordTest {
         w.addTranslation(Word("Finnish", "abab"))
         w.addTranslation(Word("Swedish", "aaaa"))
         w.addTranslation(Word("Finnish", "aaaae"))
-        assertEquals(true,
+        assertEquals(
+            true,
             w.isTranslation(Word("Finnish", "aaaa"))
                     && w.isTranslation(Word("Finnish", "abcd"))
                     && w.isTranslation(Word("Finnish", "abab"))

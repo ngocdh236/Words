@@ -1,3 +1,8 @@
+/*
+Name: Doan Ngoc
+Student ID: 1605449
+*/
+
 package com.example.words.ui.quiz
 
 import android.app.AlertDialog
@@ -30,7 +35,8 @@ class PlayQuizFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         viewDataBinding = FragmentPlayQuizBinding.inflate(inflater, container, false).apply {
-            viewmodel = ViewModelProviders.of(this@PlayQuizFragment).get(QuizViewViewModel::class.java)
+            viewmodel =
+                ViewModelProviders.of(this@PlayQuizFragment).get(QuizViewViewModel::class.java)
             setLifecycleOwner(viewLifecycleOwner)
         }
         return inflater.inflate(R.layout.fragment_play_quiz, container, false)
@@ -120,8 +126,7 @@ class PlayQuizFragment : Fragment() {
         dialogBuilder.setMessage(QuizResultFeedbackHelper.feedback(result))
             // if the dialog is cancelable
             .setCancelable(false)
-            .setPositiveButton("Ok", DialogInterface.OnClickListener {
-                    dialog, id ->
+            .setPositiveButton("Ok", DialogInterface.OnClickListener { dialog, id ->
                 dialog.dismiss()
                 activity?.finish()
             })

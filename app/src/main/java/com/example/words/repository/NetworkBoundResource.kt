@@ -1,3 +1,8 @@
+/*
+Name: Doan Ngoc
+Student ID: 1605449
+*/
+
 package com.example.words.repository
 
 import androidx.annotation.MainThread
@@ -14,9 +19,9 @@ import com.example.words.network.*
 abstract class NetworkBoundResource<ResultType, RequestType>
 @MainThread constructor(private val appExecutors: AppExecutors = AppExecutors.instance) {
 
-        private val result = MediatorLiveData<Resource<ResultType>>()
+    private val result = MediatorLiveData<Resource<ResultType>>()
 
-        init {
+    init {
         result.value = Resource.loading(null)
         val dbSource = loadFromDb()
         result.addSource(dbSource) { data ->
@@ -39,30 +44,30 @@ abstract class NetworkBoundResource<ResultType, RequestType>
     }
 
     private fun fetchFromNetwork(dbSource: LiveData<ResultType>) {
-                    val apiResponse = createCall()
-                    // we re-attach dbSource as a new source, it will dispatch its latest value quickly
-                    result.addSource(dbSource) { newData ->
-                        setValue(Resource.loading(newData))
-                    }
-                    result.addSource(apiResponse) { response ->
-                        result.removeSource(apiResponse)
-                        result.removeSource(dbSource)
-                        when (response) {
-                            is ApiSuccessResponse -> {
-                                appExecutors.diskIO().execute {
-                                    saveCallResult(processResponse(response))
-                                    appExecutors.mainThread().execute {
-                                        // TODO: Save to database. Then uncomment this
-                                        // we specially request a new live data,
-                                        // otherwise we will get immediately last cached value,
-                                        // which may not be updated with latest results received from network.
-                                        result.addSource(MutableLiveData<ResultType>(processResponse(response) as ResultType)) { newData ->
-                                            setValue(Resource.success(newData))
-                                        }
-                                    }
-                                }
+        val apiResponse = createCall()
+        // we re-attach dbSource as a new source, it will dispatch its latest value quickly
+        result.addSource(dbSource) { newData ->
+            setValue(Resource.loading(newData))
+        }
+        result.addSource(apiResponse) { response ->
+            result.removeSource(apiResponse)
+            result.removeSource(dbSource)
+            when (response) {
+                is ApiSuccessResponse -> {
+                    appExecutors.diskIO().execute {
+                        saveCallResult(processResponse(response))
+                        appExecutors.mainThread().execute {
+                            // TODO: Save to database. Then uncomment this
+                            // we specially request a new live data,
+                            // otherwise we will get immediately last cached value,
+                            // which may not be updated with latest results received from network.
+                            result.addSource(MutableLiveData<ResultType>(processResponse(response) as ResultType)) { newData ->
+                                setValue(Resource.success(newData))
                             }
-                            is ApiEmptyResponse -> {
+                        }
+                    }
+                }
+                is ApiEmptyResponse -> {
                     appExecutors.mainThread().execute {
                         // reload from disk whatever we had
                         result.addSource(loadFromDb()) { newData ->

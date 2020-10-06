@@ -1,3 +1,8 @@
+/*
+Name: Doan Ngoc
+Student ID: 1605449
+*/
+
 package com.example.words.ui.quiz
 
 import android.os.CountDownTimer
@@ -11,7 +16,8 @@ import com.example.words.repository.WordsRepository
 import com.example.words.repository.WordsRepositoryImpl
 
 // TODO: Rename to PlayQuizViewModel
-class QuizViewViewModel(private val wordsRepository: WordsRepository = WordsRepositoryImpl()) : ViewModel() {
+class QuizViewViewModel(private val wordsRepository: WordsRepository = WordsRepositoryImpl()) :
+    ViewModel() {
 
     private val ONE_SECOND = 1000L
 
@@ -39,9 +45,10 @@ class QuizViewViewModel(private val wordsRepository: WordsRepository = WordsRepo
 
     val currentQuizIndex: LiveData<Int> = _currentQuizIndex
 
-    val currentQuizIndexTitle: LiveData<String> = _currentQuizIndex.combineWith(numberOfQuizzes) { currentIndex, numberOfQuizzes ->
-        "${currentIndex!! + 1}/${numberOfQuizzes}"
-    }
+    val currentQuizIndexTitle: LiveData<String> =
+        _currentQuizIndex.combineWith(numberOfQuizzes) { currentIndex, numberOfQuizzes ->
+            "${currentIndex!! + 1}/${numberOfQuizzes}"
+        }
 
     val isLastQuestion: Boolean
         get() = _currentQuizIndex.value!! >= numberOfQuizzes.value!! - 1
@@ -62,24 +69,34 @@ class QuizViewViewModel(private val wordsRepository: WordsRepository = WordsRepo
         }
     }
 
-    val currentQuizEditDistance: LiveData<Int?> = currentQuiz.combineWith(_currentQuizAnswer) { quiz, answer ->
-        if (answer == null || quiz == null) {  return@combineWith null }
-        if (answer.length == 0) { return@combineWith null }
+    val currentQuizEditDistance: LiveData<Int?> =
+        currentQuiz.combineWith(_currentQuizAnswer) { quiz, answer ->
+            if (answer == null || quiz == null) {
+                return@combineWith null
+            }
+            if (answer.length == 0) {
+                return@combineWith null
+            }
 
-        // Always take first translation for the quiz to simplify things
-        return@combineWith quiz.translationsSet.first().editDistance(Word(lang = "", text = answer))
-    }
+            // Always take first translation for the quiz to simplify things
+            return@combineWith quiz.translationsSet.first()
+                .editDistance(Word(lang = "", text = answer))
+        }
 
-    val currentEditDistanceText: LiveData<String?> = Transformations.map(currentQuizEditDistance) { editDistance ->
-        editDistance?.let {
-            if (editDistance == 0) { return@let "Correct" }
-            return@let "You have ${editDistance} incorrect letters"
-        } ?: null
-    }
+    val currentEditDistanceText: LiveData<String?> =
+        Transformations.map(currentQuizEditDistance) { editDistance ->
+            editDistance?.let {
+                if (editDistance == 0) {
+                    return@let "Correct"
+                }
+                return@let "You have ${editDistance} incorrect letters"
+            } ?: null
+        }
 
     val currentCountDownTimer = MutableLiveData<Int>().apply { value = QUIZ_TIME_OUT.toInt() }
 
-    val currentCountDownTimerText: LiveData<String> = Transformations.map(currentCountDownTimer) { "${it} seconds left" }
+    val currentCountDownTimerText: LiveData<String> =
+        Transformations.map(currentCountDownTimer) { "${it} seconds left" }
 
     val isQuizzesDone: LiveData<Boolean> = _isQuizzesDone
 
@@ -103,7 +120,9 @@ class QuizViewViewModel(private val wordsRepository: WordsRepository = WordsRepo
     }
 
     fun goNext() {
-        if (isQuizzesDone.value ?: false) { return }
+        if (isQuizzesDone.value ?: false) {
+            return
+        }
 
         updateCurrentQuizResult()
         _currentQuizAnswer.value = null
@@ -141,7 +160,7 @@ class QuizViewViewModel(private val wordsRepository: WordsRepository = WordsRepo
 
     private fun resetTimer() {
         timer?.cancel()
-        timer = object: CountDownTimer(QUIZ_TIME_OUT, ONE_SECOND) {
+        timer = object : CountDownTimer(QUIZ_TIME_OUT, ONE_SECOND) {
             override fun onTick(millisUntilFinished: Long) {
                 currentCountDownTimer.value = (millisUntilFinished / ONE_SECOND).toInt()
             }
