@@ -1,3 +1,7 @@
+// Name: Doan Ngoc
+// Student ID: 1605449
+
+
 package com.example.words.repository
 
 import androidx.lifecycle.LiveData
@@ -10,9 +14,12 @@ interface WordsRepository {
     fun loadWords(): LiveData<Resource<List<Word>>>
 }
 
-class WordsRepositoryImpl(private val wordsApiService: WordsApiService = WordsApi.retrofitService, wordsDao: WordsDao? = null): WordsRepository  {
+class WordsRepositoryImpl(
+    private val wordsApiService: WordsApiService = WordsApi.retrofitService,
+    wordsDao: WordsDao? = null
+) : WordsRepository {
     override fun loadWords(): LiveData<Resource<List<Word>>> {
-        return object: NetworkBoundResource<List<Word>, List<Word>>() {
+        return object : NetworkBoundResource<List<Word>, List<Word>>() {
             override fun saveCallResult(item: List<Word>) {
                 // Do nothing for now
             }

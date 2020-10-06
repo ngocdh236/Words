@@ -10,10 +10,6 @@ import retrofit2.http.GET
 
 private const val BASE_URL = "https://users.metropolia.fi/~ngocd/"
 
-private val moshi = Moshi.Builder()
-    .add(KotlinJsonAdapterFactory())
-    .build()
-
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(GsonConverterFactory.create())
     .addCallAdapterFactory(LiveDataCallAdapterFactory())
